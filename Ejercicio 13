@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define TAM2 25
+
+typedef struct
+	{
+    char nomb[TAM2];
+    char ape[TAM2];
+    int dni;
+    float promedio;
+   }t_estudiante;
+
+typedef struct
+	{
+    char nomb[TAM2];
+    char ape[TAM2];
+    int dni;
+    float saldo;
+   }t_empleado;
+
+int actualiza (t_estudiante *, t_empleado *);
+
+int main()
+{
+    FILE *pfest, *pfemp;
+    int result;
+    t_estudiante estudiante;
+    t_empleado empleado;
+    pfemp=fopen("empleado.dat","r+b");
+    pfest=fopen("estudiante.dat","rb");
+    if (!pfest || !pfemp)
+   	{
+        printf ("\n\nNo hay memoria");
+        getch ();
+        exit (1);
+    }
+    fread(&estudiante,sizeof(t_estudiante),1,pfest);
+    fread(&empleado,sizeof(t_empleado),1,pfemp);
+    while(!feof(pfest) && !feof(pfemp) )
+    {
+        if(estudiante.promedio > 7)
+        {
+            printf("El saldo es:%f\n",empleado.saldo);
+            if(!actualiza(&estudiante,&empleado))
+                printf("Empleado no coincide con estudiante\n");
+            else
+                printf("El saldo actualizado es %f\n",empleado.saldo);
+            fseek(pfemp,-1L*sizeof(t_empleado),1);
+            fwrite(&empleado,sizeof(t_empleado),1,pfemp);
+            fseek(pfemp,0L,1);
+
+        }
+        fread(&estudiante,sizeof(t_estudiante),1,pfest);
+        fread(&empleado,sizeof(t_empleado),1,pfemp);
+    }
+
+}
+
+int actualiza (t_estudiante *estudiante, t_empleado *empleado)
+{
+    if(estudiante->dni != empleado->dni)
+        return 0;
+    empleado->saldo += empleado->saldo* 0.0728;
+    return 1;
+}
