@@ -27,8 +27,14 @@ int main()
     t_estudiante estudiante;
     t_empleado empleado;
     pfemp=fopen("empleado.dat","r+b");
+    if(!pfemp)
+    {
+        printf ("\n\nNo hay memoria");
+        getch ();
+        exit (1);
+    }
     pfest=fopen("estudiante.dat","rb");
-    if (!pfest || !pfemp)
+    if (!pfest)
    	{
         printf ("\n\nNo hay memoria");
         getch ();
